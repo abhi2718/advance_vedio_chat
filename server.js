@@ -15,7 +15,7 @@ const express=require('express'),
       });
       app.use(express.json());
       app.use(cors());
-      app.use(express.static(path.resolve(__dirname, './build')));
+     app.use(express.static(path.resolve(__dirname, './build')));
       io.on('connection',socket=>{
         console.log('connected with socket.io',socket.id);
         socket.on('join-room',room=>{
