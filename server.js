@@ -144,6 +144,32 @@ const express=require('express'),
         console.log(e);
       }
      });
+      app.post('/cutunwantedcall',async (req,res)=>{
+        try {
+          const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
+          const response = await fetch(
+            "https://solvedudar.co.in/cutunwantedcall",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                authorization: `${token}`,
+              },
+              body: JSON.stringify(req.body),
+            }
+          );
+          const data = await response.json();
+          if (data.status) {
+              res.status(200).json(data);
+          }else{
+            res.status(400).json({
+              success: false,
+            })
+          }
+        }catch(e) {
+          console.log(e);
+        }
+      });
       app.post('/callCut',async (req,res)=>{
         try {
           const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
@@ -160,7 +186,35 @@ const express=require('express'),
           );
           const data = await response.json();
           if (data.status) {
-              res.status(200).json(data);
+            try {
+              const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
+              const response = await fetch(
+                "https://solvedudar.co.in/cutunwantedcall",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    authorization: `${token}`,
+                  },
+                  body: JSON.stringify({
+                    roomId:req.body.room_id
+                  }),
+                }
+              );
+              const data = await response.json();
+              if (data) {
+                  res.status(200).json({
+                    ...data,
+                    unwantedCallCut:true,
+                  });
+              }else{
+                res.status(400).json({
+                  success: false,
+                })
+              }
+            }catch(e) {
+              console.log(e);
+            }
           }else{
             res.status(400).json({
               success: false,
@@ -178,4 +232,4 @@ const express=require('express'),
       server.listen(port,()=>{
           console.log(`servering on ${port}`);
       });
-     // production build5
+     // production build7
