@@ -203,6 +203,19 @@ const express=require('express'),
               );
               const data = await response.json();
               if (data) {
+                await fetch(
+                  "https://solvedudar.com/api-1-1/student/update_student_leave_room",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      authorization: `${token}`,
+                    },
+                    body: JSON.stringify({
+                      roomId:req.body.room_id
+                    }),
+                  }
+                )
                   res.status(200).json({
                     ...data,
                     unwantedCallCut:true,
