@@ -212,7 +212,7 @@ const express=require('express'),
                       authorization: `${token}`,
                     },
                     body: JSON.stringify({
-                      roomId:req.body.room_id
+                      room_id:req.body.room_id
                     }),
                   }
                 )
@@ -245,4 +245,4 @@ const express=require('express'),
       server.listen(port,()=>{
           console.log(`servering on ${port}`);
       });
-     // production build12
+     // production build13
