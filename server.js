@@ -17,16 +17,13 @@ const express=require('express'),
       app.use(cors());
      app.use(express.static(path.resolve(__dirname, './build')));
       io.on('connection',socket=>{
-        console.log('connected with socket.io',socket.id);
         socket.on('join-room',room=>{
           socket.join(room);
-          console.log('you join to room',room);
         });
           socket.on('cut_call',payload=>{
             socket.to(payload.room).emit('cut_call',payload);
           });
           socket.on('toggle-video',payload=>{
-            console.log('toggle video',payload);
             socket.to(payload.room).emit('toggle-video',payload);
           });
           socket.on('bring-student-on-home',payload=>{
@@ -170,7 +167,8 @@ const express=require('express'),
           console.log(e);
         }
       });
-      app.post('/callCut',async (req,res)=>{
+
+    app.post('/callCut',async (req,res)=>{
         try {
           const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
           const response = await fetch(
@@ -188,8 +186,8 @@ const express=require('express'),
           if (data.status) {
             try {
               const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
-              const response = await fetch(
-                "https://solvedudar.co.in/cutunwantedcall",
+              await fetch(
+                "https://solvedudar.com/api-1-1/student/update_student_leave_room",
                 {
                   method: "POST",
                   headers: {
@@ -197,49 +195,39 @@ const express=require('express'),
                     authorization: `${token}`,
                   },
                   body: JSON.stringify({
-                    roomId:req.body.room_id
+                    room_id:req.body.room_id
                   }),
                 }
-              );
-              const data = await response.json();
-              if (data) {
-                await fetch(
-                  "https://solvedudar.com/api-1-1/student/update_student_leave_room",
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      authorization: `${token}`,
-                    },
-                    body: JSON.stringify({
-                      room_id:req.body.room_id
-                    }),
-                  }
-                )
-                  res.status(200).json({
-                    ...data,
-                    unwantedCallCut:true,
-                  });
-              }else{
-                res.status(400).json({
-                  success: false,
-                })
-              }
+              )
+                res.status(200).json({
+                  ...data,
+                  unwantedCallCut:true,
+                });
             }catch(e) {
               console.log(e);
+              res.status(400).json({
+                success: false,
+                cut_call:false,
+                data
+              })
             }
           }else{
             res.status(400).json({
               success: false,
               cut_call:false,
-             data
+              data
             })
           }
         }catch(e) {
           console.log(e);
+          res.status(400).json({
+            success: false,
+            cut_call:false,
+          });
         }
       });
-      app.post('/webpageloadstatus',async(req,res)=>{
+
+    app.post('/webpageloadstatus',async(req,res)=>{
         try {
           const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
           const response = await fetch(
