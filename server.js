@@ -168,7 +168,7 @@ const express=require('express'),
         }
       });
 
-    app.post('/callCut',async (req,res)=>{
+      app.post('/callCut',async (req,res)=>{
         try {
           const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
           const response = await fetch(
@@ -186,8 +186,8 @@ const express=require('express'),
           if (data.status) {
             try {
               const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
-              await fetch(
-                "https://solvedudar.com/api-1-1/student/update_student_leave_room",
+              const response = await fetch(
+                "https://solvedudar.co.in/cutunwantedcall",
                 {
                   method: "POST",
                   headers: {
@@ -195,35 +195,46 @@ const express=require('express'),
                     authorization: `${token}`,
                   },
                   body: JSON.stringify({
-                    room_id:req.body.room_id
+                    roomId:req.body.room_id
                   }),
                 }
-              )
-                res.status(200).json({
-                  ...data,
-                  unwantedCallCut:true,
-                });
+              );
+              const data = await response.json();
+              if (data) {
+                await fetch(
+                  "https://solvedudar.com/api-1-1/student/update_student_leave_room",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      authorization: `${token}`,
+                    },
+                    body: JSON.stringify({
+                      room_id:req.body.room_id
+                    }),
+                  }
+                )
+                  res.status(200).json({
+                    ...data,
+                    unwantedCallCut:true,
+                  });
+              }else{
+                res.status(400).json({
+                  success: false,
+                })
+              }
             }catch(e) {
               console.log(e);
-              res.status(400).json({
-                success: false,
-                cut_call:false,
-                data
-              })
             }
           }else{
             res.status(400).json({
               success: false,
               cut_call:false,
-              data
+             data
             })
           }
         }catch(e) {
           console.log(e);
-          res.status(400).json({
-            success: false,
-            cut_call:false,
-          });
         }
       });
 
