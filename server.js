@@ -264,6 +264,25 @@ const express=require('express'),
           console.log(e);
         }
       });
+      app.post('/update/studentleaveStatus',async(req,res)=>{
+        await fetch(
+          "https://solvedudar.com/api-1-1/student/update_student_leave_room",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `${token}`,
+            },
+            body: JSON.stringify({
+              room_id:req.body.room_id
+            }),
+          }
+        );
+         return res.status(200).json({
+            ...data,
+            unwantedCallCut:true,
+          });
+      });
       app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, './build', 'index.html'));
       });
