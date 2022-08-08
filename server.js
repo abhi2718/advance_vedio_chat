@@ -283,6 +283,32 @@ const express=require('express'),
             unwantedCallCut:true,
           });
       });
+      app.post('/error',async(req,res)=>{
+        try {
+          const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJ0aW1lIjoxNjM3NzQ4NTU2fQ.Bm2OqrWoAyUMfhLkdjBMW2g_1s_1wydzECl-xPUmgeM';
+          const response = await fetch(
+            "https://solvedudar.com/api-1-1/teacher/update_signaling_status",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                authorization: `${token}`,
+              },
+              body: JSON.stringify(req.body),
+            }
+          );
+          const data = await response.json();
+          if (data.status) {
+              res.status(200).json(data);
+          }else{
+            res.status(400).json({
+              success: false,
+            })
+          }
+        }catch(e) {
+          console.log(e);
+        }
+      });
       app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, './build', 'index.html'));
       });
